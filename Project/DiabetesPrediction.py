@@ -1,134 +1,69 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import pandas as pd 
 import numpy as np
-
-
-# In[2]:
-
 
 #Loading Dataset
 df=pd.read_csv("diabetes.csv")
 df.head()
-
-
-# In[3]:
-
-
 df.info()
-
-
-# In[4]:
-
 
 df.isnull().sum()
 
-
-# In[5]:
-
-
 df.describe().T
-
-
-# In[6]:
 
 
 #How many zeros does each category contain?
 df.eq(0).sum()
 
-
-# In[7]:
-
-
 #We do not change anything about pregnancies and outcome because inputs might be 0 in "Pregnancies" and "Outcome" columns.
-
-
-# In[8]:
 
 
 #Looking for colmuns which includes 0 
 df[["Glucose","BloodPressure","SkinThickness","Insulin","BMI","DiabetesPedigreeFunction","Age"]]
 
 
-# In[9]:
-
 
 df[["Glucose","BloodPressure","SkinThickness","Insulin","BMI","DiabetesPedigreeFunction","Age"]]=df[["Glucose","BloodPressure","SkinThickness","Insulin","BMI","DiabetesPedigreeFunction","Age"]].replace(0,np.NaN)
 
 
-# In[10]:
-
 
 df.eq(0).sum()
-
-
-# In[11]:
 
 
 #Filling NaN blocks with mean value
 df.fillna(df.mean(),inplace=True)
 
 
-# In[12]:
-
-
 df.corr()
 
 
-# In[13]:
-
-
 import seaborn as sns
-
-
-# In[14]:
-
-
 sns.heatmap(df.corr())
 
 
-# In[15]:
+
 
 
 #Target variable is "Outcome" and other variables are feauture variables.
-
-
-# In[16]:
-
-
 x_cols = ['Glucose','Insulin','BMI','Outcome']
 df=df[x_cols]
 df
 x=df.drop(["Outcome",],axis=1)
 x
 
-
-# In[17]:
-
-
 y=df.Outcome
 y
 
 
 # Splitting Data
-
-# In[18]:
-
-
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=1)
 
 
 # ## Decision Tree Model
-
-# In[19]:
-
-
 model=DecisionTreeClassifier()
 #Train Classifier
 model=model.fit(x_train,y_train)
@@ -136,9 +71,7 @@ model=model.fit(x_train,y_train)
 y_pred=model.predict(x_test)
 
 
-# In[26]:
-
-
+#Visualization DecisionTree Model
 from six import StringIO
 from IPython.display import Image
 from matplotlib import pyplot as plt
@@ -154,32 +87,19 @@ _ = tree.plot_tree(clf,
                    filled=True)
 
 
-# In[21]:
-
-
 #Evaluation using Accuracy Score 
 from sklearn import metrics 
 dt_accuracy=metrics.accuracy_score(y_test,y_pred)*100
 print("Accuracy:",dt_accuracy)
 
 
-# In[22]:
-
 
 #Checking prediction values
 model.predict([[110,80,30.3]])
-
-
-# In[23]:
-
-
 model.predict([[300,110,35.6]])
 
 
 # ## KNN Algorithm
-
-# In[37]:
-
 
 import numpy as np 
 import pandas as pd
@@ -204,8 +124,6 @@ test_x = test[['Glucose','Insulin','BMI']]
 test_y = test['Outcome']
 
 
-# In[38]:
-
 
 def knn(x_train, y_train, x_test, y_test,n):
     n_range = range(1, n)
@@ -219,8 +137,6 @@ def knn(x_train, y_train, x_test, y_test,n):
     return results
 
 
-# In[40]:
-
 
 #Looking for knn n values
 n= 100
@@ -229,7 +145,7 @@ n_range = range(1, n)
 plt.plot(n_range, output)
 
 
-# In[41]:
+
 
 
 #Looking for knn n values
@@ -239,7 +155,7 @@ n_range = range(1, n)
 plt.plot(n_range, output)
 
 
-# In[42]:
+
 
 
 #Looking for knn n values
@@ -249,7 +165,7 @@ n_range = range(1, n)
 plt.plot(n_range, output)
 
 
-# In[57]:
+
 
 
 #Evaluating Model
@@ -257,14 +173,12 @@ knn_acc=np.max(output)*100
 print("Accuracy is: ",knn_acc)
 
 
-# In[58]:
 
 
 #Checking prediction values
 model.predict([[110,80,30.3]])
 
 
-# In[59]:
 
 
 #Checking prediction values
@@ -273,15 +187,13 @@ model.predict([[300,110,35.6]])
 
 # ## Random Forest Algorithm
 
-# In[46]:
+
 
 
 #Splitting Data
 from sklearn.model_selection import train_test_split
 x_train,x_test,y_train,y_test = train_test_split(x, y,test_size=0.2,random_state=1)
 
-
-# In[47]:
 
 
 #Genarating and Evaluating Model
@@ -293,14 +205,11 @@ rfc_acc=rfc.score(x_test, y_test)*100
 print("Accuracy is: ",rfc_acc)
 
 
-# In[48]:
-
 
 #Checking prediction values
 model.predict([[110,80,30.3]])
 
 
-# In[49]:
 
 
 #Checking prediction values
@@ -309,15 +218,12 @@ model.predict([[300,110,35.6]])
 
 # ## Supported Vector Machine Algorithm
 
-# In[50]:
+
 
 
 #Splitting Data
 from sklearn.model_selection import train_test_split
 x_train,x_test,y_train,y_test = train_test_split(x,y ,test_size=0.2,random_state=1)
-
-
-# In[51]:
 
 
 #Genarating and Evaluating Model
@@ -331,23 +237,14 @@ supvm_acc=metrics.accuracy_score(y_test, y_pred)*100
 print("Accuracy is: ",supvm_acc)
 
 
-# In[52]:
-
-
 #Checking prediction values
 model.predict([[110,80,30.3]])
-
-
-# In[53]:
-
 
 #Checking prediction values
 model.predict([[300,110,35.6]])
 
 
 # ### According to accuracy rate finding best algorithm
-
-# In[54]:
 
 
 daata=[dt_accuracy,knn_acc,rfc_acc,supvm_acc]
@@ -356,15 +253,11 @@ df2.index = ['Decision Tree', 'KNN', 'Random Forest', 'Support Vector Machine']
 df2
 
 
-# In[55]:
-
-
 #Finding max accuracy value
 maxvalue = df2.idxmax(0)
 print("The most suitable algorithm is: ",maxvalue)
 
 
-# In[ ]:
 
 
 
